@@ -24,17 +24,23 @@ galleryListEl.addEventListener('click', onClick);
 
 function onClick(event) {
   event.preventDefault();
-
+  if (!event.target.classList.contains('gallery__image')) {
+    return;
+  }
   const modalWindowImg = basicLightbox.create(`
       <img src="${event.target.dataset.source}" width="800" height="600">
   `);
-  modalWindowImg.show();
+  modalWindowImg.show(galleryListEl.addEventListener('click', closeOriginalImgByClick));
+  function closeOriginalImgByClick() {
+    modalWindowImg.close(galleryListEl.removeEventListener('keydown', closeOriginalImgByBtn));
+  }
 
   // Закриття модального вікна після натискання клавіші Escape
-  galleryListEl.addEventListener('keydown', closeOriginalImg);
-  function closeOriginalImg(event) {
+  galleryListEl.addEventListener('keydown', closeOriginalImgByBtn);
+  function closeOriginalImgByBtn(event) {
     if (event.code === 'Escape') {
-      modalWindowImg.close();
+      // console.log('Key');
+      modalWindowImg.close(galleryListEl.removeEventListener('keydown', closeOriginalImgByBtn));
     }
   }
 }
